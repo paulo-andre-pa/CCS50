@@ -1,51 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Comandos de Git — Paulo Muhongo</title>
     <style>
-        h1{
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 24px 16px;
+            line-height: 1.6;
+            color: #1f2933;
+            background: #ffffff;
+        }
+        h1 {
             font-size: large;
             color: blue;
+        }
+        code {
+            background: #f1f5f9;
+            padding: 1px 4px;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
-    <h1>Os comandos principas para connector a um reparatorio GITHUB :</h1>
+    <p><a href="index.html">← Voltar ao início</a></p>
+
+    <h1>Os comandos principais para ligar a um repositório GitHub:</h1>
     <ol>
-        <li>git clone "link do reparatorio" : copiar do Reparatorio GITHUB para o computador </li>
-        <li>touch nomedoficheiro.html</li>
-        <li>git add nomedoficheiro</li>
-        <li>git commit -m "observação do que se fez"</li>
-        <li>git status : nos permite ver onde nos situamos no repatorio</li>
-        <li>git push : publicar as alterções do computador para o GITHUB</li>
-        <li>git commit -am "observação da alteração que se fez" : Serve para commit todas as alterações</li>
-        <li>git pull : para copiar as mudanças feitas no GITHUB para o computador </li>
+        <li><code>git clone "link do repositório"</code>: copiar o repositório do GitHub para o computador</li>
+        <li><code>touch nomedoficheiro.html</code>: criar um ficheiro novo</li>
+        <li><code>git add nomedoficheiro</code>: preparar o ficheiro para o commit</li>
+        <li><code>git commit -m "observação do que se fez"</code>: guardar as alterações</li>
+        <li><code>git status</code>: permite ver onde nos situamos no repositório</li>
+        <li><code>git push</code>: publicar as alterações do computador para o GitHub</li>
+        <li><code>git commit -am "observação da alteração que se fez"</code>: fazer commit de todas as alterações</li>
+        <li><code>git pull</code>: copiar as mudanças feitas no GitHub para o computador</li>
     </ol>
-    <h2>Resolver conflitos : Marge Conflicts</h2>
-    <p>Esses conflitos aparecem quanod duas pessoas estão a fazer mudanças simultaneamente no mesmo ficheiro e na mesma linha </p>
-<h2>Outros comandos de GIT</h2>
-<ul>
-    <li>git log : Serve para verificar todas as mudanças no seu codigo num dado reparatorio</li>
-    <li>git reset --hard <\ nº do commit> : Serve para anular as mudanças faitas no ficheiro de um reparatorio</li>
-    <li>git reset --hard origin/master : Serve para recuparar o ficheiro orignal</li>
-</ul>
 
-<h2>Branching</h2>
-<p>Permite criar uma parte no reparatorio, permitindo de traballhar em diferentes parte do reparatorio no mesmo momento </p>
-<ol>
-    <li>git branch : para verificar em qual "branch"</li>
-    <li>git checkout -b nomedabrance : permite criar uma nova Branch</li>
-    <li>git checkout nomedebranch ou master : permite mudar entre as branches</li>
-    <li>git merge nomeDaBranche: para atulizar os dados de uma branche para o master</li>
-</ol>
+    <h2>Resolver conflitos: Merge Conflicts</h2>
+    <p>Estes conflitos aparecem quando duas pessoas fazem mudanças ao mesmo tempo no mesmo ficheiro e na mesma linha.</p>
 
-<h2>Farramentas que nos podem ajudar no GITHUB quando trabalhamos em grandes projectos</h2>
-<ol>
-    <li>Fork : permite que outros contribuem no seu codigo</li>
-    <li>Pull resquets : para ver quem pede para contribuir </li>
-    <li>GitHub Pages : Para criar paginas internet de forma rapida</li>
-</ol>
+    <h2>Outros comandos de Git</h2>
+    <ul>
+        <li><code>git log</code>: verificar todas as mudanças no código de um repositório</li>
+        <li><code>git reset --hard &lt;nº do commit&gt;</code>: anular as mudanças feitas a partir desse commit</li>
+        <li><code>git reset --hard origin/master</code>: recuperar a versão original do GitHub</li>
+    </ul>
+
+    <h2>Branching</h2>
+    <p>Permite criar uma ramificação no repositório, para trabalhar em diferentes partes do projeto ao mesmo tempo.</p>
+    <ol>
+        <li><code>git branch</code>: verificar em que branch estamos</li>
+        <li><code>git checkout -b nomedabranch</code>: criar uma nova branch</li>
+        <li><code>git checkout nomedabranch</code> (ou <code>master</code>): mudar entre branches</li>
+        <li><code>git merge nomedabranch</code>: juntar as alterações de uma branch à master</li>
+    </ol>
+
+    <h2>Ferramentas que nos ajudam no GitHub em grandes projetos</h2>
+    <ol>
+        <li>Fork: permite que outros contribuam para o seu código</li>
+        <li>Pull requests: ver e rever quem pede para contribuir</li>
+        <li>GitHub Pages: criar páginas de internet de forma rápida</li>
+    </ol>
 </body>
 </html>
