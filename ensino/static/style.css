@@ -1,0 +1,62 @@
+/* Cores inspiradas na bandeira de Angola */
+:root {
+    --ek-red: #cc092f;
+    --ek-red-dark: #a00725;
+    --ek-yellow: #ffcb00;
+    --ek-black: #111;
+}
+
+.bg-ek { background-color: var(--ek-red) !important; }
+.text-ek { color: var(--ek-red) !important; }
+.text-ek-yellow { color: var(--ek-yellow) !important; }
+.border-ek { border-color: var(--ek-red) !important; }
+
+.btn-ek {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--ek-red);
+    --bs-btn-border-color: var(--ek-red);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--ek-red-dark);
+    --bs-btn-hover-border-color: var(--ek-red-dark);
+    --bs-btn-active-bg: var(--ek-red-dark);
+}
+.btn-ek-yellow {
+    --bs-btn-color: var(--ek-black);
+    --bs-btn-bg: var(--ek-yellow);
+    --bs-btn-border-color: var(--ek-yellow);
+    --bs-btn-hover-color: var(--ek-black);
+    --bs-btn-hover-bg: #e6b700;
+    --bs-btn-hover-border-color: #e6b700;
+    font-weight: 600;
+}
+
+.flag-stripe {
+    height: 5px;
+    background: linear-gradient(to right, var(--ek-red) 0 50%, var(--ek-black) 50% 100%);
+}
+
+.hero {
+    background:
+        radial-gradient(circle at 85% 20%, rgba(255, 203, 0, .18), transparent 40%),
+        linear-gradient(135deg, var(--ek-black) 0%, #2a0a10 55%, var(--ek-red-dark) 100%);
+}
+.hero .stat {
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .15);
+    border-radius: 1rem;
+    padding: 1rem .5rem;
+}
+
+.post-card { transition: transform .15s ease, box-shadow .15s ease; }
+.post-card:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .12) !important; }
+.post-card .badge { position: relative; z-index: 2; }
+
+.post-body { font-size: 1.05rem; line-height: 1.7; white-space: normal; }
+
+.avatar {
+    width: 48px; height: 48px; flex-shrink: 0;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--ek-red); color: #fff; font-weight: 700; font-size: 1.25rem;
+}
+.avatar-lg { width: 72px; height: 72px; font-size: 2rem; }

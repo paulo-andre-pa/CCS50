@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block title %}{% if editing %}Editar publicação{% else %}Nova publicação{% endif %}{% endblock %}
+{% block main %}
+<div class="container py-4" style="max-width: 820px">
+    <h1 class="h3 fw-bold mb-3">{% if editing %}Editar publicação{% else %}Nova publicação{% endif %}</h1>
+    <form method="post" enctype="multipart/form-data" class="card card-body shadow-sm">
+        <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+        <div class="btn-group w-100 mb-3" role="group">
+            {% for k, v in KINDS.items() %}
+            <input type="radio" class="btn-check" name="kind" id="kind-{{ k }}" value="{{ k }}" {% if post.kind == k %}checked{% endif %}>
+            <label class="btn btn-outline-dark" for="kind-{{ k }}">{% if k == 'conteudo' %}<i class="bi bi-book"></i>{% else %}<i class="bi bi-person-video3"></i>{% endif %} {{ v }}</label>
+            {% endfor %}
+        </div>
+        <p class="form-text mt-0 mb-3" id="kind-help">
+            <strong>Conteúdo didáctico:</strong> resumos, exercícios, fichas — acesso livre. <strong>Explicação:</strong> anuncie a disciplina que quer ensinar; os alunos inscrevem-se e recebe os contactos no painel.
+        </p>
+        <div class="row g-3 mb-3">
+            <div class="col-sm-6">
+                <label class="form-label" for="discipline_id">Disciplina</label>
+                <select class="form-select" id="discipline_id" name="discipline_id" required>
+                    <option value="">Escolha…</option>
+                    {% for d in disciplines %}<option value="{{ d.id }}" {% if post.discipline_id|string == d.id|string %}selected{% endif %}>{{ d.name }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-6">
+                <label class="form-label" for="level">Nível de ensino</label>
+                <select class="form-select" id="level" name="level" required>
+                    <option value="">Escolha…</option>
+                    {% for l in LEVELS %}<option {% if post.level == l %}selected{% endif %}>{{ l }}</option>{% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="title">Título</label>
+            <input class="form-control" id="title" name="title" required minlength="5" maxlength="150" value="{{ post.title or '' }}" placeholder="Ex.: Equações do 2º grau — resumo e exercícios resolvidos">
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="summary">Resumo</label>
+            <input class="form-control" id="summary" name="summary" required minlength="10" maxlength="300" value="{{ post.summary or '' }}" placeholder="Uma ou duas frases sobre o que o aluno vai aprender">
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="body">Conteúdo / descrição</label>
+            <textarea class="form-control" id="body" name="body" rows="12" required minlength="20">{{ post.body or '' }}</textarea>
+        </div>
+        <fieldset id="offer-fields" class="border rounded-3 p-3 mb-3">
+            <legend class="float-none w-auto px-2 fs-6 fw-bold">Detalhes da explicação</legend>
+            <div class="row g-3">
+                <div class="col-sm-4">
+                    <label class="form-label" for="modality">Modalidade</label>
+                    <select class="form-select" id="modality" name="modality">
+                        <option value="">Escolha…</option>
+                        {% for m in MODALITIES %}<option {% if post.modality == m %}selected{% endif %}>{{ m }}</option>{% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" for="province">Província</label>
+                    <select class="form-select" id="province" name="province">
+                        <option value="">—</option>
+                        {% for p in PROVINCES %}<option {% if post.province == p %}selected{% endif %}>{{ p }}</option>{% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label" for="price">Preço mensal (Kz)</label>
+                    <input class="form-control" id="price" name="price" type="number" min="0" step="500" value="{{ post.price if post.price is not none else '' }}" placeholder="Vazio = a combinar">
+                </div>
+            </div>
+        </fieldset>
+        <div class="mb-4">
+            <label class="form-label" for="attachment">Anexo <span class="text-secondary">(opcional — PDF, Word, PowerPoint, Excel, imagem; máx. 10 MB)</span></label>
+            <input class="form-control" id="attachment" name="attachment" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.png,.jpg,.jpeg,.txt">
+            {% if editing and post.attachment_name %}<div class="form-text">Actual: {{ post.attachment_name }} (envie outro para substituir)</div>{% endif %}
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-ek btn-lg">{% if editing %}Guardar alterações{% else %}Publicar{% endif %}</button>
+            <a class="btn btn-link" href="{{ url_for('post_detail', post_id=post_id) if editing else url_for('dashboard') }}">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    // Mostra os campos da explicação apenas quando esse tipo está seleccionado
+    const offer = document.getElementById('offer-fields');
+    function toggle() {
+        const isOffer = document.getElementById('kind-explicacao').checked;
+        offer.hidden = !isOffer;
+        document.getElementById('modality').required = isOffer;
+    }
+    document.querySelectorAll('input[name=kind]').forEach(r => r.addEventListener('change', toggle));
+    toggle();
+</script>
+{% endblock %}

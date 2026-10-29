@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block title %}Perfil{% endblock %}
+{% block main %}
+<div class="container py-4" style="max-width: 640px">
+    <h1 class="h3 fw-bold mb-3">O meu perfil</h1>
+    <form method="post" class="card card-body shadow-sm">
+        <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+        <p class="mb-3"><span class="badge bg-ek text-capitalize">{{ user.role }}</span> <span class="text-secondary">{{ user.email }}</span></p>
+        <div class="mb-3">
+            <label class="form-label" for="name">Nome</label>
+            <input class="form-control" id="name" name="name" required value="{{ user.name }}">
+        </div>
+        <div class="row g-3 mb-3">
+            <div class="col-sm-6">
+                <label class="form-label" for="province">Província</label>
+                <select class="form-select" id="province" name="province">
+                    {% for p in PROVINCES %}<option {% if user.province == p %}selected{% endif %}>{{ p }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-6">
+                <label class="form-label" for="level">Nível de ensino</label>
+                <select class="form-select" id="level" name="level">
+                    <option value="">—</option>
+                    {% for l in LEVELS %}<option {% if user.level == l %}selected{% endif %}>{{ l }}</option>{% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="phone">Telefone / WhatsApp</label>
+            <input class="form-control" id="phone" name="phone" value="{{ user.phone }}">
+            <div class="form-text">Visível apenas para professores de explicações em que se inscreveu.</div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="bio">Sobre mim</label>
+            <textarea class="form-control" id="bio" name="bio" rows="4" maxlength="1000" placeholder="{% if user.role == 'professor' %}Formação, experiência, escolas onde lecciona…{% else %}Escola, interesses, objectivos…{% endif %}">{{ user.bio }}</textarea>
+        </div>
+        <div class="mb-4">
+            <label class="form-label" for="new_password">Nova palavra-passe <span class="text-secondary">(deixe em branco para manter)</span></label>
+            <input class="form-control" id="new_password" name="new_password" type="password" minlength="8" autocomplete="new-password">
+        </div>
+        <button class="btn btn-ek">Guardar</button>
+    </form>
+</div>
+{% endblock %}

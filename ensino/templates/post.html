@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block main %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb"><ol class="breadcrumb small">
+        <li class="breadcrumb-item"><a href="{{ url_for('posts') }}">Conteúdos</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('posts', disciplina=post.discipline_slug) }}">{{ post.discipline }}</a></li>
+        <li class="breadcrumb-item active text-truncate" aria-current="page">{{ post.title }}</li>
+    </ol></nav>
+    <div class="row g-4">
+        <article class="col-lg-8">
+            <div class="mb-2">
+                {% if post.kind == 'explicacao' %}<span class="badge bg-ek">Explicação / Aulas</span>{% else %}<span class="badge text-bg-dark">Conteúdo didáctico</span>{% endif %}
+                <span class="badge text-bg-light">{{ post.level }}</span>
+            </div>
+            <h1 class="h2 fw-bold">{{ post.title }}</h1>
+            <p class="lead text-secondary">{{ post.summary }}</p>
+            <div class="post-body">{{ post.body|nl2br }}</div>
+            {% if post.attachment %}
+            <a class="btn btn-outline-dark mt-4" href="{{ url_for('download', post_id=post.id) }}"><i class="bi bi-download"></i> Descarregar {{ post.attachment_name }}</a>
+            {% endif %}
+            <p class="small text-secondary mt-4">Publicado em {{ post.created_at|date }}{% if post.updated_at != post.created_at %} · actualizado em {{ post.updated_at|date }}{% endif %}</p>
+
+            <hr>
+            <h2 class="h5 fw-bold" id="comentarios"><i class="bi bi-chat-dots"></i> Perguntas e comentários ({{ comments|length }})</h2>
+            {% for c in comments %}
+            <div class="border-start border-3 {% if c.role == 'professor' %}border-danger{% endif %} ps-3 py-1 my-3">
+                <div class="small"><strong>{{ c.name }}</strong>{% if c.user_id == post.teacher_id %} <span class="badge bg-ek">Autor</span>{% elif c.role == 'professor' %} <span class="badge text-bg-secondary">Professor</span>{% endif %} <span class="text-secondary">· {{ c.created_at|date }}</span></div>
+                <div>{{ c.body|nl2br }}</div>
+            </div>
+            {% else %}
+            <p class="text-secondary">Ainda sem comentários. Tem alguma dúvida? Pergunte!</p>
+            {% endfor %}
+            {% if user %}
+            <form method="post" action="{{ url_for('comment', post_id=post.id) }}">
+                <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+                <textarea class="form-control mb-2" name="body" rows="3" required minlength="2" maxlength="2000" placeholder="Escreva a sua pergunta ou comentário…"></textarea>
+                <button class="btn btn-dark btn-sm">Comentar</button>
+            </form>
+            {% else %}
+            <p><a href="{{ url_for('login', next=request.path) }}">Entre</a> para comentar.</p>
+            {% endif %}
+        </article>
+
+        <aside class="col-lg-4">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h2 class="h6 text-secondary text-uppercase small">Professor</h2>
+                    <a class="h5 d-block text-reset" href="{{ url_for('teacher', user_id=post.teacher_id) }}">{{ post.teacher }}</a>
+                    <div class="small text-secondary"><i class="bi bi-geo-alt"></i> {{ post.teacher_province }}</div>
+                </div>
+            </div>
+            {% if post.kind == 'explicacao' %}
+            <div class="card shadow-sm border-ek">
+                <div class="card-body">
+                    <ul class="list-unstyled mb-3">
+                        <li><i class="bi bi-laptop"></i> <strong>Modalidade:</strong> {{ post.modality }}</li>
+                        {% if post.province %}<li><i class="bi bi-geo-alt"></i> <strong>Local:</strong> {{ post.province }}</li>{% endif %}
+                        <li><i class="bi bi-cash-coin"></i> <strong>Preço:</strong> {{ post.price|kz }}{% if post.price %} / mês{% endif %}</li>
+                        <li><i class="bi bi-people"></i> <strong>Inscritos:</strong> {{ post.enrolled }}</li>
+                    </ul>
+                    {% if not user %}
+                    <a class="btn btn-ek w-100" href="{{ url_for('login', next=request.path) }}">Entrar para se inscrever</a>
+                    {% elif user.role == 'aluno' %}
+                        {% if enrolled %}
+                        <div class="alert alert-success small"><i class="bi bi-check-circle"></i> Está inscrito(a). O professor vai contactá-lo(a).</div>
+                        <form method="post" action="{{ url_for('unenroll', post_id=post.id) }}">
+                            <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+                            <button class="btn btn-outline-secondary btn-sm w-100">Cancelar inscrição</button>
+                        </form>
+                        {% else %}
+                        <form method="post" action="{{ url_for('enroll', post_id=post.id) }}">
+                            <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+                            <textarea class="form-control mb-2" name="message" rows="2" maxlength="500" placeholder="Mensagem para o professor (opcional): horário preferido, dúvidas…"></textarea>
+                            <button class="btn btn-ek w-100"><i class="bi bi-pencil-square"></i> Inscrever-me</button>
+                        </form>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            {% if user and (user.id == post.teacher_id or user.role == 'admin') %}
+            <div class="d-flex gap-2 mt-3">
+                <a class="btn btn-outline-dark flex-fill" href="{{ url_for('edit_post', post_id=post.id) }}"><i class="bi bi-pencil"></i> Editar</a>
+                <form method="post" action="{{ url_for('delete_post', post_id=post.id) }}" onsubmit="return confirm('Apagar esta publicação?')">
+                    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+                    <button class="btn btn-outline-danger"><i class="bi bi-trash"></i> Apagar</button>
+                </form>
+            </div>
+            {% endif %}
+        </aside>
+    </div>
+</div>
+{% endblock %}

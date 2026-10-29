@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+{% block main %}
+<section class="hero text-light py-5">
+    <div class="container py-lg-4">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <h1 class="display-5 fw-bold">Aprender sem fronteiras, <span class="text-ek-yellow">em toda Angola</span>.</h1>
+                <p class="lead">Conteúdos didácticos gratuitos, explicações com professores qualificados e uma comunidade de alunos e educadores das 21 províncias.</p>
+                <form class="d-flex gap-2 my-4" action="{{ url_for('posts') }}">
+                    <input class="form-control form-control-lg" type="search" name="q" placeholder="O que quer aprender hoje? Ex.: equações, fotossíntese…" aria-label="Pesquisar">
+                    <button class="btn btn-ek-yellow btn-lg"><i class="bi bi-search"></i></button>
+                </form>
+                {% if not user %}
+                <a class="btn btn-light btn-lg me-2 mb-2" href="{{ url_for('register', tipo='aluno') }}"><i class="bi bi-backpack"></i> Sou aluno</a>
+                <a class="btn btn-outline-light btn-lg mb-2" href="{{ url_for('register', tipo='professor') }}"><i class="bi bi-easel"></i> Sou professor</a>
+                {% endif %}
+            </div>
+            <div class="col-lg-5">
+                <div class="row g-3 text-center">
+                    <div class="col-4"><div class="stat"><div class="h2 fw-bold mb-0">{{ stats.alunos }}</div><small>Alunos</small></div></div>
+                    <div class="col-4"><div class="stat"><div class="h2 fw-bold mb-0">{{ stats.professores }}</div><small>Professores</small></div></div>
+                    <div class="col-4"><div class="stat"><div class="h2 fw-bold mb-0">{{ stats.conteudos }}</div><small>Publicações</small></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row g-4 text-center">
+        <div class="col-md-4">
+            <i class="bi bi-journal-richtext display-5 text-ek"></i>
+            <h5 class="mt-2">Conteúdos didácticos</h5>
+            <p class="text-secondary">Resumos, fichas de exercícios e materiais de apoio alinhados com o currículo angolano, do Primário ao Superior.</p>
+        </div>
+        <div class="col-md-4">
+            <i class="bi bi-people display-5 text-ek"></i>
+            <h5 class="mt-2">Explicações</h5>
+            <p class="text-secondary">Encontre explicadores presenciais na sua província ou aulas online — e inscreva-se com um clique.</p>
+        </div>
+        <div class="col-md-4">
+            <i class="bi bi-easel2 display-5 text-ek"></i>
+            <h5 class="mt-2">Para professores</h5>
+            <p class="text-secondary">Publique as disciplinas que quer ensinar, partilhe materiais e acompanhe os alunos inscritos no seu painel.</p>
+        </div>
+    </div>
+</section>
+
+<section class="container pb-4">
+    <div class="d-flex justify-content-between align-items-end mb-3">
+        <h2 class="h4 fw-bold mb-0">Disciplinas</h2>
+        <a href="{{ url_for('disciplines') }}">Ver todas <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        {% for d in disciplines %}
+        <a class="btn btn-outline-dark rounded-pill" href="{{ url_for('posts', disciplina=d.slug) }}">{{ d.name }} <span class="badge text-bg-secondary">{{ d.total }}</span></a>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="container py-4">
+    <div class="d-flex justify-content-between align-items-end mb-3">
+        <h2 class="h4 fw-bold mb-0">Publicações recentes</h2>
+        <a href="{{ url_for('posts') }}">Ver todas <i class="bi bi-arrow-right"></i></a>
+    </div>
+    {% if latest %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for p in latest %}{% include "_post_card.html" %}{% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center text-secondary py-5 border rounded-3">
+        <i class="bi bi-inbox display-6"></i>
+        <p class="mt-2">Ainda não há publicações. {% if user and user.role == 'professor' %}<a href="{{ url_for('new_post') }}">Seja o primeiro a publicar!</a>{% else %}Professor? <a href="{{ url_for('register', tipo='professor') }}">Registe-se e publique o primeiro conteúdo.</a>{% endif %}</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}{{ teacher.name }}{% endblock %}
+{% block main %}
+<div class="container py-4">
+    <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="avatar avatar-lg">{{ teacher.name[0]|upper }}</div>
+        <div>
+            <h1 class="h3 fw-bold mb-0">{{ teacher.name }}</h1>
+            <div class="text-secondary"><i class="bi bi-geo-alt"></i> {{ teacher.province }} · Professor desde {{ teacher.created_at[:4] }}</div>
+        </div>
+    </div>
+    {% if teacher.bio %}<p class="lead">{{ teacher.bio|nl2br }}</p>{% endif %}
+    <h2 class="h5 fw-bold mt-4">Publicações ({{ posts|length }})</h2>
+    {% if posts %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for p in posts %}{% include "_post_card.html" %}{% endfor %}
+    </div>
+    {% else %}
+    <p class="text-secondary">Ainda sem publicações.</p>
+    {% endif %}
+</div>
+{% endblock %}

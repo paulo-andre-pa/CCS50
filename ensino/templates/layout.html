@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-AO">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Ensino Ekulihiso — conteúdos didácticos, explicações e professores em todas as províncias de Angola.">
+    <meta name="theme-color" content="#cc092f">
+    <title>{% block title %}Início{% endblock %} · Ensino Ekulihiso</title>
+    <link href="{{ url_for('static', filename='vendor/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='vendor/bootstrap-icons.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+</head>
+<body class="d-flex flex-column min-vh-100">
+<nav class="navbar navbar-expand-lg navbar-dark bg-ek sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">
+            <i class="bi bi-mortarboard-fill text-ek-yellow"></i> Ensino <span class="text-ek-yellow">Ekulihiso</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-label="Menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="nav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('posts') }}">Conteúdos</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('posts', tipo='explicacao') }}">Explicações</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('disciplines') }}">Disciplinas</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('teachers') }}">Professores</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">Sobre</a></li>
+            </ul>
+            <ul class="navbar-nav">
+            {% if user %}
+                {% if user.role in ('professor', 'admin') %}
+                <li class="nav-item"><a class="btn btn-ek-yellow btn-sm my-1 me-lg-2" href="{{ url_for('new_post') }}"><i class="bi bi-plus-lg"></i> Publicar</a></li>
+                {% endif %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle"></i> {{ user.name.split()[0] }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ url_for('dashboard') }}"><i class="bi bi-speedometer2"></i> Painel</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('profile') }}"><i class="bi bi-gear"></i> Perfil</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form method="post" action="{{ url_for('logout') }}">
+                                <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+                                <button class="dropdown-item"><i class="bi bi-box-arrow-right"></i> Sair</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            {% else %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Entrar</a></li>
+                <li class="nav-item"><a class="btn btn-ek-yellow btn-sm my-1 ms-lg-2" href="{{ url_for('register') }}">Inscrever-se</a></li>
+            {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="flag-stripe"></div>
+
+<main class="flex-grow-1">
+    <div class="container mt-3">
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% block main %}{% endblock %}
+</main>
+
+<footer class="bg-dark text-light py-4 mt-5">
+    <div class="container">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <h6 class="fw-bold"><i class="bi bi-mortarboard-fill text-ek-yellow"></i> Ensino Ekulihiso</h6>
+                <p class="small text-secondary mb-0">Educação de qualidade ao alcance de todos os angolanos — de Cabinda ao Cunene.</p>
+            </div>
+            <div class="col-md-6 text-md-end small">
+                <a class="link-light me-3" href="{{ url_for('posts') }}">Conteúdos</a>
+                <a class="link-light me-3" href="{{ url_for('teachers') }}">Professores</a>
+                <a class="link-light" href="{{ url_for('about') }}">Sobre</a>
+                <p class="text-secondary mt-2 mb-0">© ensino.ekulihiso.com</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<script src="{{ url_for('static', filename='vendor/bootstrap.bundle.min.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

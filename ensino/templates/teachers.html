@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block title %}Professores{% endblock %}
+{% block main %}
+<div class="container py-4">
+    <h1 class="h3 fw-bold mb-4">Professores</h1>
+    {% if teachers %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for t in teachers %}
+        <div class="col">
+            <div class="card h-100 shadow-sm post-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <div class="avatar">{{ t.name[0]|upper }}</div>
+                        <div>
+                            <h2 class="h6 fw-bold mb-0"><a class="stretched-link text-reset text-decoration-none" href="{{ url_for('teacher', user_id=t.id) }}">{{ t.name }}</a></h2>
+                            <div class="small text-secondary"><i class="bi bi-geo-alt"></i> {{ t.province }} · {{ t.total }} publicação(ões)</div>
+                        </div>
+                    </div>
+                    {% if t.subjects %}<div class="small">{{ t.subjects.replace(',', ' · ') }}</div>{% endif %}
+                    {% if t.bio %}<p class="small text-secondary mt-2 mb-0">{{ t.bio|truncate(140) }}</p>{% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-secondary">Ainda não há professores registados. <a href="{{ url_for('register', tipo='professor') }}">Registe-se como professor</a>.</p>
+    {% endif %}
+</div>
+{% endblock %}

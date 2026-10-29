@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block title %}Entrar{% endblock %}
+{% block main %}
+<div class="container py-5" style="max-width: 420px">
+    <h1 class="h3 fw-bold mb-3 text-center">Entrar</h1>
+    <form method="post" class="card card-body shadow-sm">
+        <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+        <div class="mb-3">
+            <label class="form-label" for="email">Email</label>
+            <input class="form-control" id="email" name="email" type="email" required autofocus value="{{ email }}" autocomplete="email">
+        </div>
+        <div class="mb-4">
+            <label class="form-label" for="password">Palavra-passe</label>
+            <input class="form-control" id="password" name="password" type="password" required autocomplete="current-password">
+        </div>
+        <button class="btn btn-ek w-100">Entrar</button>
+        <p class="text-center mt-3 mb-0 small">Ainda não tem conta? <a href="{{ url_for('register') }}">Inscreva-se</a></p>
+    </form>
+</div>
+{% endblock %}

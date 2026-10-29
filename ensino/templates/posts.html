@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block title %}Conteúdos{% endblock %}
+{% block main %}
+<div class="container py-4">
+    <h1 class="h3 fw-bold">{% if request.args.get('tipo') == 'explicacao' %}Explicações{% else %}Conteúdos e explicações{% endif %}</h1>
+    <form class="card card-body shadow-sm mb-4" method="get">
+        <div class="row g-2">
+            <div class="col-lg-4"><input class="form-control" type="search" name="q" value="{{ request.args.get('q', '') }}" placeholder="Pesquisar…"></div>
+            <div class="col-6 col-lg-2">
+                <select class="form-select" name="disciplina" aria-label="Disciplina">
+                    <option value="">Todas as disciplinas</option>
+                    {% for d in disciplines %}<option value="{{ d.slug }}" {% if request.args.get('disciplina') == d.slug %}selected{% endif %}>{{ d.name }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-6 col-lg-2">
+                <select class="form-select" name="nivel" aria-label="Nível">
+                    <option value="">Todos os níveis</option>
+                    {% for l in LEVELS %}<option {% if request.args.get('nivel') == l %}selected{% endif %}>{{ l }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-6 col-lg-2">
+                <select class="form-select" name="tipo" aria-label="Tipo">
+                    <option value="">Todos os tipos</option>
+                    {% for k, v in KINDS.items() %}<option value="{{ k }}" {% if request.args.get('tipo') == k %}selected{% endif %}>{{ v }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-6 col-lg-2">
+                <select class="form-select" name="provincia" aria-label="Província">
+                    <option value="">Todas as províncias</option>
+                    {% for p in PROVINCES %}<option {% if request.args.get('provincia') == p %}selected{% endif %}>{{ p }}</option>{% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="mt-2 d-flex gap-2">
+            <button class="btn btn-ek"><i class="bi bi-funnel"></i> Filtrar</button>
+            <a class="btn btn-link" href="{{ url_for('posts') }}">Limpar</a>
+            <span class="ms-auto align-self-center text-secondary small">{{ total }} resultado(s)</span>
+        </div>
+    </form>
+    {% if posts %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for p in posts %}{% include "_post_card.html" %}{% endfor %}
+    </div>
+    {% if pages > 1 %}
+    <nav class="mt-4"><ul class="pagination justify-content-center">
+        {% for n in range(1, pages + 1) %}
+        {% set a = request.args.to_dict() %}{% set _ = a.update({'pagina': n}) %}
+        <li class="page-item {% if n == page %}active{% endif %}"><a class="page-link" href="{{ url_for('posts', **a) }}">{{ n }}</a></li>
+        {% endfor %}
+    </ul></nav>
+    {% endif %}
+    {% else %}
+    <div class="text-center text-secondary py-5"><i class="bi bi-search display-6"></i><p class="mt-2">Nenhuma publicação encontrada com estes filtros.</p></div>
+    {% endif %}
+</div>
+{% endblock %}

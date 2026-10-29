@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}O meu painel{% endblock %}
+{% block main %}
+<div class="container py-4">
+    <h1 class="h3 fw-bold mb-0">Olá, {{ user.name.split()[0] }}</h1>
+    <p class="text-secondary">{{ user.level or 'Defina o seu nível de ensino no perfil para receber sugestões.' }}</p>
+
+    <h2 class="h5 fw-bold mt-4">As minhas inscrições</h2>
+    {% if enrollments %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+        {% for p in enrollments %}{% include "_post_card.html" %}{% endfor %}
+    </div>
+    {% else %}
+    <p class="text-secondary mb-5">Ainda não se inscreveu em nenhuma explicação. <a href="{{ url_for('posts', tipo='explicacao', provincia=user.province) }}">Ver explicações em {{ user.province }} e online</a>.</p>
+    {% endif %}
+
+    <h2 class="h5 fw-bold">Sugestões para o seu nível</h2>
+    {% if suggested %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for p in suggested %}{% include "_post_card.html" %}{% endfor %}
+    </div>
+    {% else %}
+    <p class="text-secondary"><a href="{{ url_for('posts') }}">Explorar todos os conteúdos</a></p>
+    {% endif %}
+</div>
+{% endblock %}

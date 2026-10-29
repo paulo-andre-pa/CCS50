@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block title %}Inscrever-se{% endblock %}
+{% block main %}
+<div class="container py-4" style="max-width: 640px">
+    <h1 class="h3 fw-bold mb-1">Criar conta</h1>
+    <p class="text-secondary">Gratuito para alunos e professores.</p>
+    <form method="post" class="card card-body shadow-sm">
+        <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+        <div class="btn-group w-100 mb-3" role="group" aria-label="Tipo de conta">
+            <input type="radio" class="btn-check" name="role" id="role-aluno" value="aluno" {% if role != 'professor' %}checked{% endif %}>
+            <label class="btn btn-outline-dark" for="role-aluno"><i class="bi bi-backpack"></i> Sou aluno</label>
+            <input type="radio" class="btn-check" name="role" id="role-professor" value="professor" {% if role == 'professor' %}checked{% endif %}>
+            <label class="btn btn-outline-dark" for="role-professor"><i class="bi bi-easel"></i> Sou professor</label>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="name">Nome completo</label>
+            <input class="form-control" id="name" name="name" required minlength="3" value="{{ form.get('name', '') }}" autocomplete="name">
+        </div>
+        <div class="row g-3 mb-3">
+            <div class="col-sm-7">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control" id="email" name="email" type="email" required value="{{ form.get('email', '') }}" autocomplete="email">
+            </div>
+            <div class="col-sm-5">
+                <label class="form-label" for="phone">Telefone <span class="text-secondary">(opcional)</span></label>
+                <input class="form-control" id="phone" name="phone" type="tel" placeholder="+244 9XX XXX XXX" value="{{ form.get('phone', '') }}">
+            </div>
+        </div>
+        <div class="row g-3 mb-3">
+            <div class="col-sm-6">
+                <label class="form-label" for="province">Província</label>
+                <select class="form-select" id="province" name="province" required>
+                    <option value="">Escolha…</option>
+                    {% for p in PROVINCES %}<option {% if form.get('province') == p %}selected{% endif %}>{{ p }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-sm-6">
+                <label class="form-label" for="level">Nível de ensino <span class="text-secondary">(alunos)</span></label>
+                <select class="form-select" id="level" name="level">
+                    <option value="">—</option>
+                    {% for l in LEVELS %}<option {% if form.get('level') == l %}selected{% endif %}>{{ l }}</option>{% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row g-3 mb-4">
+            <div class="col-sm-6">
+                <label class="form-label" for="password">Palavra-passe</label>
+                <input class="form-control" id="password" name="password" type="password" required minlength="8" autocomplete="new-password">
+                <div class="form-text">Mínimo 8 caracteres.</div>
+            </div>
+            <div class="col-sm-6">
+                <label class="form-label" for="confirmation">Confirmar palavra-passe</label>
+                <input class="form-control" id="confirmation" name="confirmation" type="password" required minlength="8" autocomplete="new-password">
+            </div>
+        </div>
+        <button class="btn btn-ek btn-lg w-100">Criar conta</button>
+        <p class="text-center mt-3 mb-0 small">Já tem conta? <a href="{{ url_for('login') }}">Entrar</a></p>
+    </form>
+</div>
+{% endblock %}

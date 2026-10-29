@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}Disciplinas{% endblock %}
+{% block main %}
+<div class="container py-4">
+    <h1 class="h3 fw-bold mb-4">Disciplinas</h1>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+        {% for d in disciplines %}
+        <div class="col">
+            <a class="card h-100 text-decoration-none text-reset shadow-sm post-card" href="{{ url_for('posts', disciplina=d.slug) }}">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold">{{ d.name }}</h2>
+                    <div class="small text-secondary">{{ d.total }} publicação(ões) · {{ d.offers or 0 }} explicação(ões)</div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
