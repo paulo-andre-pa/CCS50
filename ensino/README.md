@@ -1,21 +1,21 @@
 # Ensino Ekulihiso — ensino.ekulihiso.com
 
-Uma plataforma de ensino para Angola. Os **professores** publicam conteúdos didácticos e anunciam as disciplinas que querem ensinar (explicações). Os **alunos** inscrevem-se, estudam, descarregam materiais e tiram dúvidas.
+Uma plataforma de ensino para Angola. Os **professores** publicam conteúdos didácticos e anunciam as disciplinas que querem ensinar, com preço por hora (como no Superprof). Os **alunos** reservam aulas, pagam pela plataforma (Referência Multicaixa ou transferência), estudam e tiram dúvidas.
 
 ## Funcionalidades
 
 | Para alunos | Para professores |
 |---|---|
 | Conta gratuita com província e nível de ensino | Conta de professor com perfil público |
-| Pesquisa e filtros por disciplina, nível, tipo e província | Anunciar disciplinas para ensinar (presencial/online, preço em Kz) |
+| Pesquisa e filtros por disciplina, nível, tipo e província | Anunciar disciplinas para ensinar (presencial/online, preço por hora, 1ª aula grátis opcional) |
 | Conteúdos didácticos e anexos para descarregar (PDF, Word, PPT…) | Publicar conteúdos didácticos com anexos (até 10 MB) |
-| Inscrição em explicações, com mensagem ao professor | Painel com os alunos inscritos e os seus contactos |
+| Reserva de aulas (data, hora, duração) e pagamento por Referência Multicaixa ou transferência | Aceitar ou recusar reservas; contactos do aluno depois do pagamento |
 | Perguntas e comentários em cada publicação | Editar e apagar as suas publicações |
-| Painel com inscrições e sugestões para o seu nível | Responder às dúvidas dos alunos |
+| Painel com as reservas e sugestões para o seu nível | Ver valores a receber no IBAN (menos a comissão) |
 
 Feita a pensar em Angola:
 - As **21 províncias** e os níveis do sistema de ensino angolano (Primário, I e II Ciclo, Técnico-Profissional, Exames de Acesso, Superior).
-- Preços em **Kwanzas**, explicações presenciais ou online.
+- Preços em **Kwanzas**, pagamento por **Referência Multicaixa** (ATM, Multicaixa Express, internet banking) ou transferência. Ver o estudo em [`docs/PAGAMENTOS.md`](docs/PAGAMENTOS.md).
 - **Leve**: sem frameworks JavaScript, Bootstrap servido localmente (sem depender de CDNs), funciona bem em telemóveis e ligações 3G.
 - Interface em português de Angola.
 
@@ -51,6 +51,9 @@ flask --app app run --debug
 Abra http://127.0.0.1:5000. O `seed.py` é opcional e cria contas de demonstração:
 - Professor: `ana@exemplo.ao` / `professor123`
 - Aluno: `aluno@exemplo.ao` / `aluno1234`
+- Administrador: `admin@exemplo.ao` / `admin1234`
+
+Em desenvolvimento os pagamentos são simulados (referências fictícias e um botão "Simular pagamento").
 
 ### Testes
 
@@ -115,6 +118,13 @@ pip install pytest && python -m pytest tests
 | `DATABASE` | Caminho da base SQLite (por omissão `instance/ensino.db`). |
 | `UPLOAD_FOLDER` | Pasta dos anexos (por omissão `instance/uploads`). |
 | `SESSION_COOKIE_SECURE` | `1` quando o site corre em HTTPS. |
+| `COMMISSION_PERCENT` | Comissão da plataforma sobre cada aula paga (por omissão `10`). |
+| `PROXYPAY_API_KEY`, `PROXYPAY_ENTITY` | Chave e Entidade da ProxyPay para as Referências Multicaixa. |
+| `PROXYPAY_ENV` | `sandbox` (por omissão) ou `production`. |
+| `BANK_NAME`, `BANK_HOLDER`, `BANK_IBAN` | Conta da empresa para pagamentos por transferência. |
+| `PAYMENTS_SANDBOX` | `1` para simular pagamentos (activo por omissão quando não há `SECRET_KEY`). |
+
+Depois de criar a sua conta no site, torne-a administradora com `flask --app app criar-admin o-seu@email.ao`. O painel `/admin` serve para confirmar transferências e registar os pagamentos aos professores.
 
 Faça cópias de segurança regulares da pasta `instance/` (base de dados e anexos).
 
@@ -138,8 +148,10 @@ O site usa a identidade visual da Ekulihiso, a mesma de [ler.ekulihiso.com](http
 
 ```
 ensino/
-├── app.py            # Aplicação Flask (rotas, autenticação, validação)
-├── schema.sql        # Tabelas: users, disciplines, posts, enrollments, comments
+├── app.py            # Aplicação Flask (rotas, reservas, administração)
+├── payments.py       # Referências Multicaixa (ProxyPay) e modo de testes
+├── schema.sql        # Tabelas: users, disciplines, posts, bookings, payment_events, comments
+├── docs/             # Estudo dos métodos de pagamento
 ├── seed.py           # Dados de demonstração
 ├── templates/        # Páginas HTML (Jinja)
 ├── static/           # CSS, ícone e Bootstrap local
@@ -149,7 +161,8 @@ ensino/
 ## Próximos passos sugeridos
 
 - Recuperação de palavra-passe por email ou SMS.
-- Pagamentos de explicações via Multicaixa Express / referência bancária.
+- Pagamento "push" Multicaixa Express e carteiras móveis (Unitel Money, Afrimoney).
+- Notificações por email/SMS das reservas.
 - Avaliações dos professores pelos alunos.
-- Painel de administração para moderar conteúdos.
+- Moderação de conteúdos no painel de administração.
 - Migrar para PostgreSQL quando houver muitos utilizadores em simultâneo.

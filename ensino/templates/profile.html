@@ -28,8 +28,15 @@
         <div class="mb-3">
             <label class="form-label" for="phone">Telefone / WhatsApp</label>
             <input class="form-control" id="phone" name="phone" value="{{ user.phone }}">
-            <div class="form-text">Visível apenas para professores de explicações em que se inscreveu.</div>
+            <div class="form-text">Partilhado apenas depois de uma reserva estar paga.</div>
         </div>
+        {% if user.role in ('professor', 'admin') %}
+        <div class="mb-3">
+            <label class="form-label" for="iban">IBAN para receber pagamentos</label>
+            <input class="form-control font-monospace" id="iban" name="iban" value="{{ user.iban }}" placeholder="AO06 0000 0000 0000 0000 0000 0" maxlength="40">
+            <div class="form-text">O valor das aulas (menos a comissão) é transferido para esta conta depois de cada aula.</div>
+        </div>
+        {% endif %}
         <div class="mb-3">
             <label class="form-label" for="bio">Sobre mim</label>
             <textarea class="form-control" id="bio" name="bio" rows="4" maxlength="1000" placeholder="{% if user.role == 'professor' %}Formação, experiência, escolas onde lecciona…{% else %}Escola, interesses, objectivos…{% endif %}">{{ user.bio }}</textarea>

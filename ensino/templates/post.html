@@ -51,30 +51,56 @@
                 </div>
             </div>
             {% if post.kind == 'explicacao' %}
-            <div class="card shadow-sm border-brand">
+            <div class="card shadow-sm border-brand" id="reservar">
                 <div class="card-body">
-                    <ul class="list-unstyled mb-3">
-                        <li><i class="bi bi-laptop"></i> <strong>Modalidade:</strong> {{ post.modality }}</li>
-                        {% if post.province %}<li><i class="bi bi-geo-alt"></i> <strong>Local:</strong> {{ post.province }}</li>{% endif %}
-                        <li><i class="bi bi-cash-coin"></i> <strong>Preço:</strong> {{ post.price|kz }}{% if post.price %} / mês{% endif %}</li>
-                        <li><i class="bi bi-people"></i> <strong>Inscritos:</strong> {{ post.enrolled }}</li>
+                    <div class="d-flex align-items-baseline gap-2 mb-1">
+                        <span class="price-tag">{{ post.price|kz }}</span>{% if post.price %}<span class="text-secondary">/ hora</span>{% endif %}
+                    </div>
+                    {% if post.first_lesson_free %}<span class="badge bg-brand mb-3"><i class="bi bi-gift"></i> 1ª aula grátis</span>{% endif %}
+                    <ul class="list-unstyled small mb-3">
+                        <li><i class="bi bi-laptop"></i> {{ post.modality }}{% if post.province %} · {{ post.province }}{% endif %}</li>
+                        <li><i class="bi bi-people"></i> {{ post.enrolled }} aluno(s) já tiveram aulas</li>
+                        <li><i class="bi bi-shield-check"></i> Pagamento seguro pela plataforma</li>
                     </ul>
                     {% if not user %}
-                    <a class="btn btn-brand w-100" href="{{ url_for('login', next=request.path) }}">Entrar para se inscrever</a>
-                    {% elif user.role == 'aluno' %}
-                        {% if enrolled %}
-                        <div class="alert alert-success small"><i class="bi bi-check-circle"></i> Está inscrito(a). O professor vai contactá-lo(a).</div>
-                        <form method="post" action="{{ url_for('unenroll', post_id=post.id) }}">
-                            <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
-                            <button class="btn btn-outline-secondary btn-sm w-100">Cancelar inscrição</button>
-                        </form>
-                        {% else %}
-                        <form method="post" action="{{ url_for('enroll', post_id=post.id) }}">
-                            <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
-                            <textarea class="form-control mb-2" name="message" rows="2" maxlength="500" placeholder="Mensagem para o professor (opcional): horário preferido, dúvidas…"></textarea>
-                            <button class="btn btn-brand w-100"><i class="bi bi-pencil-square"></i> Inscrever-me</button>
-                        </form>
-                        {% endif %}
+                    <a class="btn btn-brand w-100" href="{{ url_for('login', next=request.path) }}">Entrar para reservar</a>
+                    {% elif user.role == 'aluno' and post.price %}
+                    <form method="post" action="{{ url_for('book', post_id=post.id) }}" id="booking-form">
+                        <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+                        <div class="row g-2 mb-2">
+                            <div class="col-7">
+                                <label class="form-label small mb-1" for="lesson_date">Data</label>
+                                <input class="form-control" type="date" id="lesson_date" name="lesson_date" min="{{ today }}" required>
+                            </div>
+                            <div class="col-5">
+                                <label class="form-label small mb-1" for="lesson_time">Hora</label>
+                                <input class="form-control" type="time" id="lesson_time" name="lesson_time" step="900" required>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-2">
+                            <div class="col">
+                                <label class="form-label small mb-1" for="hours">Duração</label>
+                                <select class="form-select" id="hours" name="hours" data-price="{{ post.price }}" data-free="{{ 1 if free_trial else 0 }}">
+                                    {% for h in HOURS_CHOICES %}<option value="{{ h }}">{{ h }} hora{{ 's' if h > 1 }}</option>{% endfor %}
+                                </select>
+                            </div>
+                            {% if post.modality == 'Presencial e Online' %}
+                            <div class="col">
+                                <label class="form-label small mb-1" for="modality">Modalidade</label>
+                                <select class="form-select" id="modality" name="modality" required>
+                                    <option>Presencial</option><option>Online</option>
+                                </select>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <textarea class="form-control mb-2" name="message" rows="2" maxlength="1000" placeholder="Mensagem para o professor: o que precisa de estudar, local preferido…"></textarea>
+                        <div class="d-flex justify-content-between small mb-2">
+                            <span>Total</span><strong id="booking-total"></strong>
+                        </div>
+                        {% if free_trial %}<p class="small text-brand mb-2"><i class="bi bi-gift"></i> A 1ª hora é grátis por ser a sua primeira aula com este professor.</p>{% endif %}
+                        <button class="btn btn-brand w-100"><i class="bi bi-calendar-check"></i> Pedir reserva</button>
+                        <p class="form-text mb-0">Só paga depois de o professor aceitar.</p>
+                    </form>
                     {% endif %}
                 </div>
             </div>
@@ -91,4 +117,19 @@
         </aside>
     </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script>
+    // Mostra o total da reserva em Kwanzas
+    const hours = document.getElementById('hours');
+    if (hours) {
+        const fmt = n => n.toLocaleString('pt-AO').replace(/\s/g, '.') + ' Kz';
+        const update = () => {
+            const total = Number(hours.dataset.price) * (Number(hours.value) - Number(hours.dataset.free));
+            document.getElementById('booking-total').textContent = total ? fmt(total) : 'Grátis';
+        };
+        hours.addEventListener('change', update);
+        update();
+    }
+</script>
 {% endblock %}

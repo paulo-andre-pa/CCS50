@@ -14,7 +14,8 @@
             <div class="small text-secondary">
                 <div><i class="bi bi-mortarboard"></i> {{ p.level }}</div>
                 {% if p.kind == 'explicacao' %}
-                <div><i class="bi bi-geo-alt"></i> {{ p.modality }}{% if p.province %} · {{ p.province }}{% endif %} · <strong>{{ p.price|kz }}</strong></div>
+                <div><i class="bi bi-geo-alt"></i> {{ p.modality }}{% if p.province %} · {{ p.province }}{% endif %}</div>
+                <div class="mt-1"><strong class="text-brand">{{ p.price|kz }}</strong>{% if p.price %}<span>/h</span>{% endif %}{% if p.first_lesson_free %} <span class="badge bg-brand"><i class="bi bi-gift"></i> 1ª aula grátis</span>{% endif %}</div>
                 {% endif %}
             </div>
         </div>

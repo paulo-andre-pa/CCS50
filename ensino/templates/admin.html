@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% block title %}Administração{% endblock %}
+{% block main %}
+<div class="container py-4">
+    <h1 class="h3 mb-3">Administração</h1>
+    <div class="row g-3 mb-4">
+        <div class="col-md-4"><div class="card card-body text-center"><div class="h3 mb-0">{{ totals[2] }}</div><small class="text-secondary">Reservas pagas</small></div></div>
+        <div class="col-md-4"><div class="card card-body text-center"><div class="h3 mb-0">{{ totals[0]|kz }}</div><small class="text-secondary">Volume pago pelos alunos</small></div></div>
+        <div class="col-md-4"><div class="card card-body text-center"><div class="h3 mb-0">{{ totals[1]|kz }}</div><small class="text-secondary">Comissões da plataforma</small></div></div>
+    </div>
+
+    <h2 class="h5">Comprovativos de transferência por confirmar</h2>
+    {% if proofs %}
+    <div class="table-responsive mb-4"><table class="table align-middle">
+        <thead><tr><th>#</th><th>Aluno</th><th>Montante</th><th>Comprovativo</th><th></th></tr></thead>
+        <tbody>{% for b in proofs %}
+        <tr>
+            <td><a href="{{ url_for('booking_detail', booking_id=b.id) }}">{{ b.id }}</a></td>
+            <td>{{ b.student_name }}</td>
+            <td>{{ b.amount|kz }}</td>
+            <td><a href="{{ url_for('booking_proof_download', booking_id=b.id) }}">{{ b.proof_name }}</a></td>
+            <td class="text-end">
+                <form method="post" action="{{ url_for('admin_confirm', booking_id=b.id) }}" class="d-inline">
+                    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-brand">Confirmar pagamento</button>
+                </form>
+            </td>
+        </tr>{% endfor %}</tbody>
+    </table></div>
+    {% else %}<p class="text-secondary mb-4">Nada por confirmar.</p>{% endif %}
+
+    <h2 class="h5">Pagamentos a fazer aos professores</h2>
+    {% if payouts %}
+    <div class="table-responsive mb-4"><table class="table align-middle">
+        <thead><tr><th>#</th><th>Professor</th><th>IBAN</th><th>Aula</th><th>Valor</th><th></th></tr></thead>
+        <tbody>{% for b in payouts %}
+        <tr>
+            <td><a href="{{ url_for('booking_detail', booking_id=b.id) }}">{{ b.id }}</a></td>
+            <td>{{ b.teacher_name }}</td>
+            <td class="font-monospace small">{{ b.teacher_iban or '— sem IBAN —' }}</td>
+            <td class="small">{{ b.lesson_date }}</td>
+            <td>{{ b.teacher_amount|kz }}</td>
+            <td class="text-end">
+                <form method="post" action="{{ url_for('admin_payout', booking_id=b.id) }}" class="d-inline">
+                    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-outline-dark">Marcar como pago</button>
+                </form>
+            </td>
+        </tr>{% endfor %}</tbody>
+    </table></div>
+    {% else %}<p class="text-secondary mb-4">Nada por pagar.</p>{% endif %}
+
+    <h2 class="h5">Reservas recentes</h2>
+    <div class="table-responsive"><table class="table table-sm align-middle">
+        <thead><tr><th>#</th><th>Aluno</th><th>Professor</th><th>Aula</th><th>Montante</th><th>Método</th><th>Estado</th><th></th></tr></thead>
+        <tbody>{% for b in recent %}
+        <tr>
+            <td><a href="{{ url_for('booking_detail', booking_id=b.id) }}">{{ b.id }}</a></td>
+            <td class="small">{{ b.student_name }}</td>
+            <td class="small">{{ b.teacher_name }}</td>
+            <td class="small">{{ b.lesson_date }}</td>
+            <td class="small">{{ b.amount|kz }}</td>
+            <td class="small">{{ b.payment_method or '—' }}</td>
+            <td><span class="badge text-bg-{{ BOOKING_STATUS[b.status][1] }}">{{ BOOKING_STATUS[b.status][0] }}</span></td>
+            <td class="text-end">
+                {% if b.status in ('pendente', 'aceite', 'paga') %}
+                <form method="post" action="{{ url_for('admin_cancel', booking_id=b.id) }}" class="d-inline" onsubmit="return confirm('Cancelar a reserva {{ b.id }}?')">
+                    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-link text-danger p-0">Cancelar</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>{% endfor %}</tbody>
+    </table></div>
+</div>
+{% endblock %}

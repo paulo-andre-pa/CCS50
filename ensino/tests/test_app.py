@@ -1,6 +1,11 @@
+import hashlib
+import hmac
 import io
+import json
 import os
+import sqlite3
 import sys
+from datetime import date, timedelta
 
 import pytest
 
@@ -15,6 +20,11 @@ def app(tmp_path):
         "UPLOAD_FOLDER": str(tmp_path / "uploads"),
         "TESTING": True,
         "TESTING_NO_CSRF": True,
+        "PAYMENTS_SANDBOX": True,
+        "PROXYPAY_API_KEY": "",
+        "BANK_NAME": "Banco Teste", "BANK_HOLDER": "Ekulihiso, Lda",
+        "BANK_IBAN": "AO06000000000000000000000",
+        "COMMISSION_PERCENT": 10,
     })
 
 
@@ -40,7 +50,7 @@ def offer(**extra):
         "summary": "Aulas de reforço para a 12ª classe.",
         "body": "Programa completo: funções, limites, derivadas e preparação para exames.",
         "level": "II Ciclo do Secundário (10ª–13ª classe)",
-        "modality": "Presencial", "province": "Luanda", "price": "15000",
+        "modality": "Presencial", "province": "Luanda", "price": "3000",
     }
     data.update(extra)
     return data
@@ -76,23 +86,145 @@ def test_student_cannot_publish(client):
     assert "Apenas professores".encode() in r.data
 
 
-def test_teacher_publishes_and_student_enrolls(app, client):
-    register(client, "professor")
-    r = client.post("/publicar", data=offer(), follow_redirects=True)
-    assert b"Explica" in r.data and "15.000 Kz".encode() in r.data
-    client.post("/sair")
+def tomorrow():
+    return (date.today() + timedelta(days=1)).isoformat()
 
+
+def booking_form(**extra):
+    data = {"lesson_date": tomorrow(), "lesson_time": "15:00", "hours": "2",
+            "message": "Sábados de manhã"}
+    data.update(extra)
+    return data
+
+
+def setup_booking(app, client, **post_extra):
+    """Professor publica, aluno reserva. Devolve o cliente do aluno."""
+    register(client, "professor")
+    client.post("/publicar", data=offer(**post_extra))
     student = app.test_client()
     register(student, "aluno")
-    r = student.post("/conteudos/1/inscrever", data={"message": "Sábados de manhã"},
-                     follow_redirects=True)
-    assert "Inscrição feita".encode() in r.data
-    student.post("/conteudos/1/comentar", data={"body": "Qual é o horário?"})
+    student.post("/conteudos/1/reservar", data=booking_form())
+    return student
 
-    client.post("/entrar", data={"email": "professor@exemplo.ao", "password": "segredo123"})
-    r = client.get("/painel")
-    assert b"aluno@exemplo.ao" in r.data and "Sábados de manhã".encode() in r.data
-    assert "Qual é o horário?".encode() in client.get("/conteudos/1").data
+
+def query(app, sql, *args):
+    con = sqlite3.connect(app.config["DATABASE"])
+    con.row_factory = sqlite3.Row
+    row = con.execute(sql, args).fetchone()
+    con.commit()
+    con.close()
+    return row
+
+
+def test_booking_full_flow(app, client):
+    student = setup_booking(app, client)
+    b = query(app, "SELECT * FROM bookings WHERE id = 1")
+    assert b["status"] == "pendente" and b["amount"] == 6000
+    assert b["commission"] == 600 and b["teacher_amount"] == 5400
+
+    # O professor vê o pedido, mas ainda não os contactos do aluno
+    page = client.get("/reservas/1").data
+    assert "Sábados de manhã".encode() in page and b"aluno@exemplo.ao" not in page
+    client.post("/reservas/1/aceitar")
+    assert query(app, "SELECT status FROM bookings")["status"] == "aceite"
+
+    # O aluno gera a referência e paga (modo de testes)
+    student.post("/reservas/1/referencia")
+    b = query(app, "SELECT * FROM bookings WHERE id = 1")
+    assert b["payment_reference"] and b["payment_method"] == "referencia"
+    assert b["payment_reference"].encode() in student.get("/reservas/1").data
+    student.post("/reservas/1/simular-pagamento")
+    assert query(app, "SELECT status FROM bookings")["status"] == "paga"
+
+    # Depois de pago, cada um vê os contactos do outro
+    assert b"professor@exemplo.ao" in student.get("/reservas/1").data
+    assert b"aluno@exemplo.ao" in client.get("/reservas/1").data
+
+    # Aula concluída -> repasse ao professor pelo administrador
+    query(app, "UPDATE bookings SET lesson_date = ?", date.today().isoformat())
+    student.post("/reservas/1/concluir")
+    assert query(app, "SELECT status FROM bookings")["status"] == "concluida"
+    admin = app.test_client()
+    register(admin, "aluno", email="admin@exemplo.ao")
+    query(app, "UPDATE users SET role = 'admin' WHERE email = 'admin@exemplo.ao'")
+    assert "5.400 Kz".encode() in admin.get("/admin").data
+    admin.post("/admin/reservas/1/repasse")
+    assert query(app, "SELECT payout_status FROM bookings")["payout_status"] == "pago"
+
+
+def test_cannot_pay_before_teacher_accepts(app, client):
+    student = setup_booking(app, client)
+    assert student.post("/reservas/1/referencia").status_code == 400
+    student.post("/reservas/1/simular-pagamento")
+    assert query(app, "SELECT status FROM bookings")["status"] == "pendente"
+
+
+def test_first_lesson_free(app, client):
+    register(client, "professor")
+    client.post("/publicar", data=offer(first_lesson_free="1"))
+    student = app.test_client()
+    register(student, "aluno")
+    student.post("/conteudos/1/reservar", data=booking_form(hours="1"))
+    b = query(app, "SELECT * FROM bookings WHERE id = 1")
+    assert b["amount"] == 0 and b["free_hours"] == 1
+    client.post("/reservas/1/aceitar")
+    assert query(app, "SELECT status FROM bookings")["status"] == "paga"
+    # A segunda reserva com o mesmo professor já é paga
+    student.post("/conteudos/1/reservar", data=booking_form(hours="1"))
+    assert query(app, "SELECT amount FROM bookings WHERE id = 2")["amount"] == 3000
+
+
+def test_booking_validation_and_permissions(app, client):
+    student = setup_booking(app, client)
+    past = (date.today() - timedelta(days=1)).isoformat()
+    r = student.post("/conteudos/1/reservar", data=booking_form(lesson_date=past),
+                     follow_redirects=True)
+    assert "Escolha uma data".encode() in r.data
+    assert client.post("/conteudos/1/reservar", data=booking_form(),
+                       follow_redirects=True).status_code == 200
+    assert query(app, "SELECT COUNT(*) AS n FROM bookings")["n"] == 1
+    outsider = app.test_client()
+    register(outsider, "aluno", email="outro@exemplo.ao")
+    assert outsider.get("/reservas/1").status_code == 403
+    assert student.post("/reservas/1/aceitar").status_code == 403
+
+
+def test_ad_requires_price(client):
+    register(client, "professor")
+    r = client.post("/publicar", data=offer(price=""))
+    assert r.status_code == 422 and "preço por hora".encode() in r.data
+
+
+def test_bank_transfer_proof_confirmed_by_admin(app, client):
+    student = setup_booking(app, client)
+    client.post("/reservas/1/aceitar")
+    student.post("/reservas/1/comprovativo", data={"proof": (io.BytesIO(b"%PDF"), "talao.pdf")},
+                 content_type="multipart/form-data")
+    assert query(app, "SELECT payment_method FROM bookings")["payment_method"] == "transferencia"
+    admin = app.test_client()
+    register(admin, "aluno", email="admin@exemplo.ao")
+    query(app, "UPDATE users SET role = 'admin' WHERE email = 'admin@exemplo.ao'")
+    assert b"talao.pdf" in admin.get("/admin").data
+    admin.post("/admin/reservas/1/confirmar")
+    assert query(app, "SELECT status FROM bookings")["status"] == "paga"
+    assert student.get("/admin").status_code == 403
+
+
+def test_proxypay_webhook(app, client):
+    setup_booking(app, client)
+    client.post("/reservas/1/aceitar")
+    query(app, "UPDATE bookings SET payment_reference = '900123456'")
+    app.config["PROXYPAY_API_KEY"] = "chave-secreta"
+    body = json.dumps({"id": 77, "reference_id": 900123456, "amount": "6000.00",
+                       "custom_fields": {"booking_id": "1"}}).encode()
+    sig = hmac.new(b"chave-secreta", body, hashlib.sha256).hexdigest()
+    hook = "/pagamentos/proxypay/webhook"
+    headers = {"Content-Type": "application/json"}
+    assert client.post(hook, data=body, headers={**headers, "X-Signature": "falsa"}).status_code == 400
+    assert query(app, "SELECT status FROM bookings")["status"] == "aceite"
+    r = client.post(hook, data=body, headers={**headers, "X-Signature": sig})
+    assert r.status_code == 200 and query(app, "SELECT status FROM bookings")["status"] == "paga"
+    assert client.post(hook, data=body, headers={**headers, "X-Signature": sig}).json["status"] == "duplicado"
 
 
 def test_filters_and_search(client):

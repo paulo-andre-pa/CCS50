@@ -12,7 +12,7 @@
             {% endfor %}
         </div>
         <p class="form-text mt-0 mb-3" id="kind-help">
-            <strong>Conteúdo didáctico:</strong> resumos, exercícios, fichas — acesso livre. <strong>Explicação:</strong> anuncie a disciplina que quer ensinar; os alunos inscrevem-se e recebe os contactos no painel.
+            <strong>Conteúdo didáctico:</strong> resumos, exercícios, fichas — acesso livre. <strong>Explicação:</strong> anuncie a disciplina que quer ensinar e o preço por hora; os alunos reservam e pagam pela plataforma.
         </p>
         <div class="row g-3 mb-3">
             <div class="col-sm-6">
@@ -60,10 +60,15 @@
                     </select>
                 </div>
                 <div class="col-sm-4">
-                    <label class="form-label" for="price">Preço mensal (Kz)</label>
-                    <input class="form-control" id="price" name="price" type="number" min="0" step="500" value="{{ post.price if post.price is not none else '' }}" placeholder="Vazio = a combinar">
+                    <label class="form-label" for="price">Preço por hora (Kz)</label>
+                    <input class="form-control" id="price" name="price" type="number" min="500" step="100" value="{{ post.price if post.price is not none else '' }}" placeholder="Ex.: 3000">
                 </div>
             </div>
+            <div class="form-check mt-3">
+                <input class="form-check-input" type="checkbox" id="first_lesson_free" name="first_lesson_free" value="1" {% if post.first_lesson_free and post.first_lesson_free != '0' %}checked{% endif %}>
+                <label class="form-check-label" for="first_lesson_free">Oferecer a 1ª hora grátis a cada aluno novo <span class="text-secondary">(atrai mais alunos)</span></label>
+            </div>
+            <p class="form-text mb-0">A plataforma retém uma comissão de {{ config.COMMISSION_PERCENT }}% sobre cada aula paga. O restante é transferido para o IBAN do seu perfil depois da aula.</p>
         </fieldset>
         <div class="mb-4">
             <label class="form-label" for="attachment">Anexo <span class="text-secondary">(opcional — PDF, Word, PowerPoint, Excel, imagem; máx. 10 MB)</span></label>
@@ -85,6 +90,7 @@
         const isOffer = document.getElementById('kind-explicacao').checked;
         offer.hidden = !isOffer;
         document.getElementById('modality').required = isOffer;
+        document.getElementById('price').required = isOffer;
     }
     document.querySelectorAll('input[name=kind]').forEach(r => r.addEventListener('change', toggle));
     toggle();

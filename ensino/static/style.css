@@ -171,3 +171,27 @@ h4, h5, h6, .h4, .h5, .h6 { font-family: var(--font-text); font-weight: 600; }
 
 /* Etiquetas das disciplinas: mais leves que os botões */
 .btn.rounded-pill { text-transform: none; letter-spacing: 0; font-weight: 500; font-size: .9rem; border-radius: 50rem; }
+
+/* Preço, referência de pagamento e passos da reserva */
+.price-tag { font-family: var(--font-display); font-size: 2rem; font-weight: 500; color: var(--ink); }
+.reference-box {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 1rem 1.25rem;
+    font-family: var(--font-ui);
+}
+.reference-box div { display: flex; justify-content: space-between; padding: .2rem 0; }
+.reference-box span { color: var(--mist); font-size: .85rem; text-transform: uppercase; letter-spacing: .06em; }
+.reference-box strong { font-size: 1.15rem; letter-spacing: .05em; }
+.steps { display: flex; list-style: none; padding: 0; margin: 0; counter-reset: step; font-family: var(--font-ui); font-size: .8rem; }
+.steps li { flex: 1; position: relative; text-align: center; color: var(--mist); text-transform: uppercase; letter-spacing: .06em; padding-top: 2rem; }
+.steps li::before {
+    counter-increment: step; content: counter(step);
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 1.6rem; height: 1.6rem; line-height: 1.6rem; border-radius: 50%;
+    background: var(--sand); color: var(--ink); font-weight: 600; z-index: 1;
+}
+.steps li + li::after { content: ""; position: absolute; top: .8rem; left: -50%; width: 100%; height: 2px; background: var(--sand); }
+.steps li.done { color: var(--ink); }
+.steps li.done::before { background: var(--terracota); color: var(--cream); }
+.steps li.done + li.done::after { background: var(--terracota); }
