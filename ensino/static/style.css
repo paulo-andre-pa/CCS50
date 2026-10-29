@@ -1,44 +1,72 @@
-/* Cores inspiradas na bandeira de Angola */
+/*
+ * Cores da marca — altere apenas estas variáveis para mudar a paleta do site.
+ * Paleta genérica (azul + âmbar). Para usar as cores de ler.ekulihiso.com,
+ * substitua os valores abaixo pelos códigos hexadecimais desse site.
+ */
 :root {
-    --ek-red: #cc092f;
-    --ek-red-dark: #a00725;
-    --ek-yellow: #ffcb00;
-    --ek-black: #111;
+    --brand: #1e40af;          /* cor principal: botões, destaques */
+    --brand-dark: #1e3a8a;     /* hover e fundos escuros */
+    --brand-darker: #0f172a;   /* fundo do rodapé e do topo da página inicial */
+    --accent: #f59e0b;         /* cor de destaque secundária */
+    --accent-dark: #d97706;
+    --accent-text: #111827;    /* texto sobre a cor de destaque */
+    --bs-link-color-rgb: 30, 64, 175;
+    --bs-link-hover-color-rgb: 30, 58, 138;
 }
 
-.bg-ek { background-color: var(--ek-red) !important; }
-.text-ek { color: var(--ek-red) !important; }
-.text-ek-yellow { color: var(--ek-yellow) !important; }
-.border-ek { border-color: var(--ek-red) !important; }
+.bg-brand { background-color: var(--brand) !important; }
+.text-brand { color: var(--brand) !important; }
+.text-accent { color: var(--accent) !important; }
+.border-brand { border-color: var(--brand) !important; }
 
-.btn-ek {
+.btn-brand {
     --bs-btn-color: #fff;
-    --bs-btn-bg: var(--ek-red);
-    --bs-btn-border-color: var(--ek-red);
+    --bs-btn-bg: var(--brand);
+    --bs-btn-border-color: var(--brand);
     --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: var(--ek-red-dark);
-    --bs-btn-hover-border-color: var(--ek-red-dark);
-    --bs-btn-active-bg: var(--ek-red-dark);
+    --bs-btn-hover-bg: var(--brand-dark);
+    --bs-btn-hover-border-color: var(--brand-dark);
+    --bs-btn-active-bg: var(--brand-dark);
+    --bs-btn-active-border-color: var(--brand-dark);
 }
-.btn-ek-yellow {
-    --bs-btn-color: var(--ek-black);
-    --bs-btn-bg: var(--ek-yellow);
-    --bs-btn-border-color: var(--ek-yellow);
-    --bs-btn-hover-color: var(--ek-black);
-    --bs-btn-hover-bg: #e6b700;
-    --bs-btn-hover-border-color: #e6b700;
+.btn-accent {
+    --bs-btn-color: var(--accent-text);
+    --bs-btn-bg: var(--accent);
+    --bs-btn-border-color: var(--accent);
+    --bs-btn-hover-color: var(--accent-text);
+    --bs-btn-hover-bg: var(--accent-dark);
+    --bs-btn-hover-border-color: var(--accent-dark);
+    --bs-btn-active-bg: var(--accent-dark);
     font-weight: 600;
 }
 
-.flag-stripe {
-    height: 5px;
-    background: linear-gradient(to right, var(--ek-red) 0 50%, var(--ek-black) 50% 100%);
+/* Logótipo com o nome por baixo */
+.brand-logo {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+    text-decoration: none;
 }
+.brand-logo img { display: block; width: auto; }
+.brand-caption {
+    margin-top: .25rem;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: var(--brand-darker);
+}
+.brand-logo-footer .brand-caption { color: #fff; }
+
+.navbar .nav-link { color: #374151; font-weight: 500; }
+.navbar .nav-link:hover, .navbar .nav-link:focus { color: var(--brand); }
+
+.footer-brand { background-color: var(--brand-darker); }
 
 .hero {
     background:
-        radial-gradient(circle at 85% 20%, rgba(255, 203, 0, .18), transparent 40%),
-        linear-gradient(135deg, var(--ek-black) 0%, #2a0a10 55%, var(--ek-red-dark) 100%);
+        radial-gradient(circle at 85% 20%, rgba(255, 255, 255, .10), transparent 40%),
+        linear-gradient(135deg, var(--brand-darker) 0%, var(--brand-dark) 55%, var(--brand) 100%);
 }
 .hero .stat {
     background: rgba(255, 255, 255, .08);
@@ -57,6 +85,6 @@
     width: 48px; height: 48px; flex-shrink: 0;
     border-radius: 50%;
     display: grid; place-items: center;
-    background: var(--ek-red); color: #fff; font-weight: 700; font-size: 1.25rem;
+    background: var(--brand); color: #fff; font-weight: 700; font-size: 1.25rem;
 }
 .avatar-lg { width: 72px; height: 72px; font-size: 2rem; }

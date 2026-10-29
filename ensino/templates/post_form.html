@@ -71,7 +71,7 @@
             {% if editing and post.attachment_name %}<div class="form-text">Actual: {{ post.attachment_name }} (envie outro para substituir)</div>{% endif %}
         </div>
         <div class="d-flex gap-2">
-            <button class="btn btn-ek btn-lg">{% if editing %}Guardar alterações{% else %}Publicar{% endif %}</button>
+            <button class="btn btn-brand btn-lg">{% if editing %}Guardar alterações{% else %}Publicar{% endif %}</button>
             <a class="btn btn-link" href="{{ url_for('post_detail', post_id=post_id) if editing else url_for('dashboard') }}">Cancelar</a>
         </div>
     </form>

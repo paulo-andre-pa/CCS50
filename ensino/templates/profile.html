@@ -5,7 +5,7 @@
     <h1 class="h3 fw-bold mb-3">O meu perfil</h1>
     <form method="post" class="card card-body shadow-sm">
         <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
-        <p class="mb-3"><span class="badge bg-ek text-capitalize">{{ user.role }}</span> <span class="text-secondary">{{ user.email }}</span></p>
+        <p class="mb-3"><span class="badge bg-brand text-capitalize">{{ user.role }}</span> <span class="text-secondary">{{ user.email }}</span></p>
         <div class="mb-3">
             <label class="form-label" for="name">Nome</label>
             <input class="form-control" id="name" name="name" required value="{{ user.name }}">
@@ -38,7 +38,7 @@
             <label class="form-label" for="new_password">Nova palavra-passe <span class="text-secondary">(deixe em branco para manter)</span></label>
             <input class="form-control" id="new_password" name="new_password" type="password" minlength="8" autocomplete="new-password">
         </div>
-        <button class="btn btn-ek">Guardar</button>
+        <button class="btn btn-brand">Guardar</button>
     </form>
 </div>
 {% endblock %}

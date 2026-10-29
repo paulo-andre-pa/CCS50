@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 48" role="img" aria-label="Ekulihiso">
+  <!-- Logótipo provisório: substitua este ficheiro pelo logótipo de ler.ekulihiso.com -->
+  <path d="M32 10C25 5 14 4 4 6v34c10-2 21-1 28 4V10z" fill="#1e40af"/>
+  <path d="M32 10c7-5 18-6 28-4v34c-10-2-21-1-28 4V10z" fill="#3b82f6"/>
+  <path d="M32 10v34" stroke="#fff" stroke-width="1.5"/>
+  <circle cx="32" cy="6" r="5" fill="#f59e0b"/>
+</svg>

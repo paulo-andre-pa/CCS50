@@ -118,6 +118,11 @@ pip install pytest && python -m pytest tests
 
 Faça cópias de segurança regulares da pasta `instance/` (base de dados e anexos).
 
+## Cores e logótipo
+
+- **Cores:** todas estão definidas no início de `static/style.css` (`--brand`, `--brand-dark`, `--brand-darker`, `--accent`…). Basta trocar esses códigos para mudar a paleta do site inteiro.
+- **Logótipo:** substitua `static/logo.svg` (e `static/favicon.svg`) pelo logótipo da Ekulihiso. O nome "Ensino Ekulihiso" aparece automaticamente por baixo do logótipo, no menu e no rodapé. Se o logótipo for PNG, guarde-o como `static/logo.png` e altere `logo.svg` para `logo.png` em `templates/layout.html`.
+
 ## Estrutura
 
 ```

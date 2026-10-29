@@ -4,11 +4,11 @@
     <div class="container py-lg-4">
         <div class="row align-items-center g-4">
             <div class="col-lg-7">
-                <h1 class="display-5 fw-bold">Aprender sem fronteiras, <span class="text-ek-yellow">em toda Angola</span>.</h1>
+                <h1 class="display-5 fw-bold">Aprender sem fronteiras, <span class="text-accent">em toda Angola</span>.</h1>
                 <p class="lead">Conteúdos didácticos gratuitos, explicações com professores qualificados e uma comunidade de alunos e educadores das 21 províncias.</p>
                 <form class="d-flex gap-2 my-4" action="{{ url_for('posts') }}">
                     <input class="form-control form-control-lg" type="search" name="q" placeholder="O que quer aprender hoje? Ex.: equações, fotossíntese…" aria-label="Pesquisar">
-                    <button class="btn btn-ek-yellow btn-lg"><i class="bi bi-search"></i></button>
+                    <button class="btn btn-accent btn-lg"><i class="bi bi-search"></i></button>
                 </form>
                 {% if not user %}
                 <a class="btn btn-light btn-lg me-2 mb-2" href="{{ url_for('register', tipo='aluno') }}"><i class="bi bi-backpack"></i> Sou aluno</a>
@@ -29,17 +29,17 @@
 <section class="container py-5">
     <div class="row g-4 text-center">
         <div class="col-md-4">
-            <i class="bi bi-journal-richtext display-5 text-ek"></i>
+            <i class="bi bi-journal-richtext display-5 text-brand"></i>
             <h5 class="mt-2">Conteúdos didácticos</h5>
             <p class="text-secondary">Resumos, fichas de exercícios e materiais de apoio alinhados com o currículo angolano, do Primário ao Superior.</p>
         </div>
         <div class="col-md-4">
-            <i class="bi bi-people display-5 text-ek"></i>
+            <i class="bi bi-people display-5 text-brand"></i>
             <h5 class="mt-2">Explicações</h5>
             <p class="text-secondary">Encontre explicadores presenciais na sua província ou aulas online — e inscreva-se com um clique.</p>
         </div>
         <div class="col-md-4">
-            <i class="bi bi-easel2 display-5 text-ek"></i>
+            <i class="bi bi-easel2 display-5 text-brand"></i>
             <h5 class="mt-2">Para professores</h5>
             <p class="text-secondary">Publique as disciplinas que quer ensinar, partilhe materiais e acompanhe os alunos inscritos no seu painel.</p>
         </div>

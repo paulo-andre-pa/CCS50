@@ -4,7 +4,7 @@
             <div class="d-flex justify-content-between align-items-start mb-2 gap-2">
                 <a class="badge text-bg-light text-decoration-none" href="{{ url_for('posts', disciplina=p.discipline_slug) }}">{{ p.discipline }}</a>
                 {% if p.kind == 'explicacao' %}
-                <span class="badge bg-ek"><i class="bi bi-person-video3"></i> Explicação</span>
+                <span class="badge bg-brand"><i class="bi bi-person-video3"></i> Explicação</span>
                 {% else %}
                 <span class="badge text-bg-dark"><i class="bi bi-book"></i> Conteúdo</span>
                 {% endif %}
