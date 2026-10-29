@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Ensino Ekulihiso — conteúdos didácticos, explicações e professores em todas as províncias de Angola.">
-    <meta name="theme-color" content="#1e3a8a">
+    <meta name="theme-color" content="#171f2a">
     <title>{% block title %}Início{% endblock %} · Ensino Ekulihiso</title>
     <link href="{{ url_for('static', filename='vendor/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='vendor/bootstrap-icons.min.css') }}" rel="stylesheet">
@@ -12,10 +12,10 @@
     <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
 </head>
 <body class="d-flex flex-column min-vh-100">
-<nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm sticky-top">
+<nav class="navbar navbar-expand-lg navbar-dark navbar-brand-bar sticky-top" data-bs-theme="dark">
     <div class="container">
         <a class="navbar-brand brand-logo" href="{{ url_for('index') }}" aria-label="Ensino Ekulihiso — início">
-            <img src="{{ url_for('static', filename='logo.svg') }}" alt="" height="40">
+            <img src="{{ url_for('static', filename='logo.svg') }}" alt="" height="46">
             <span class="brand-caption">Ensino Ekulihiso</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-label="Menu">
@@ -81,13 +81,14 @@
                     <img src="{{ url_for('static', filename='logo.svg') }}" alt="" height="36">
                     <span class="brand-caption">Ensino Ekulihiso</span>
                 </div>
-                <p class="small text-secondary mb-0">Educação de qualidade ao alcance de todos os angolanos — de Cabinda ao Cunene.</p>
+                <p class="small footer-muted mb-3">Educação de qualidade ao alcance de todos os angolanos — de Cabinda ao Cunene.</p>
+                <p class="sona-note mb-0">O desenho é um sona, a arte dos Cokwe do leste de Angola: uma única linha traçada na areia, sem levantar o dedo, enquanto se conta uma história.</p>
             </div>
             <div class="col-md-6 text-md-end small">
                 <a class="link-light me-3" href="{{ url_for('posts') }}">Conteúdos</a>
                 <a class="link-light me-3" href="{{ url_for('teachers') }}">Professores</a>
                 <a class="link-light" href="{{ url_for('about') }}">Sobre</a>
-                <p class="text-secondary mt-2 mb-0">© ensino.ekulihiso.com</p>
+                <p class="footer-muted mt-2 mb-0">© ensino.ekulihiso.com · <a class="link-light" href="https://ler.ekulihiso.com">ler.ekulihiso.com</a></p>
             </div>
         </div>
     </div>

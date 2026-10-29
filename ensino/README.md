@@ -120,8 +120,19 @@ Faça cópias de segurança regulares da pasta `instance/` (base de dados e anex
 
 ## Cores e logótipo
 
-- **Cores:** todas estão definidas no início de `static/style.css` (`--brand`, `--brand-dark`, `--brand-darker`, `--accent`…). Basta trocar esses códigos para mudar a paleta do site inteiro.
-- **Logótipo:** substitua `static/logo.svg` (e `static/favicon.svg`) pelo logótipo da Ekulihiso. O nome "Ensino Ekulihiso" aparece automaticamente por baixo do logótipo, no menu e no rodapé. Se o logótipo for PNG, guarde-o como `static/logo.png` e altere `logo.svg` para `logo.png` em `templates/layout.html`.
+O site usa a identidade visual da Ekulihiso, a mesma de [ler.ekulihiso.com](https://ler.ekulihiso.com):
+
+| Cor | Código | Onde |
+|---|---|---|
+| Azul-noite | `#171f2a` | menu, topo da página inicial, rodapé |
+| Coral | `#d86a5b` | linha do sona, botões em fundo escuro |
+| Terracota | `#a44529` | ícone, botões e destaques em fundo claro |
+| Creme | `#faf5ef` | fundo das páginas |
+| Areia | `#ece6da` | pontos do sona, texto claro |
+
+- **Logótipo:** o sona (arte dos Cokwe do leste de Angola) em `static/logo.svg`, com "Ensino Ekulihiso" escrito por baixo. O ícone do separador (`static/favicon.svg`) é a versão creme sobre terracota.
+- **Letras:** Bodoni Moda (títulos), Crimson Pro (texto) e IBM Plex Sans (botões e menus), servidas localmente a partir de `static/fonts/` (licença SIL Open Font).
+- Para mudar cores, altere as variáveis no início de `static/style.css`.
 
 ## Estrutura
 

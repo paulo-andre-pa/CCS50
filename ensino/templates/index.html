@@ -4,14 +4,15 @@
     <div class="container py-lg-4">
         <div class="row align-items-center g-4">
             <div class="col-lg-7">
-                <h1 class="display-5 fw-bold">Aprender sem fronteiras, <span class="text-accent">em toda Angola</span>.</h1>
+                <div class="rule mb-4"></div>
+                <h1 class="hero-title">Onde Angola aprende e ensina.</h1>
                 <p class="lead">Conteúdos didácticos gratuitos, explicações com professores qualificados e uma comunidade de alunos e educadores das 21 províncias.</p>
                 <form class="d-flex gap-2 my-4" action="{{ url_for('posts') }}">
                     <input class="form-control form-control-lg" type="search" name="q" placeholder="O que quer aprender hoje? Ex.: equações, fotossíntese…" aria-label="Pesquisar">
                     <button class="btn btn-accent btn-lg"><i class="bi bi-search"></i></button>
                 </form>
                 {% if not user %}
-                <a class="btn btn-light btn-lg me-2 mb-2" href="{{ url_for('register', tipo='aluno') }}"><i class="bi bi-backpack"></i> Sou aluno</a>
+                <a class="btn btn-accent btn-lg me-2 mb-2" href="{{ url_for('register', tipo='aluno') }}"><i class="bi bi-backpack"></i> Sou aluno</a>
                 <a class="btn btn-outline-light btn-lg mb-2" href="{{ url_for('register', tipo='professor') }}"><i class="bi bi-easel"></i> Sou professor</a>
                 {% endif %}
             </div>

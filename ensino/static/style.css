@@ -1,46 +1,108 @@
 /*
- * Cores da marca — altere apenas estas variáveis para mudar a paleta do site.
- * Paleta genérica (azul + âmbar). Para usar as cores de ler.ekulihiso.com,
- * substitua os valores abaixo pelos códigos hexadecimais desse site.
+ * Identidade visual da Ekulihiso (a mesma de ler.ekulihiso.com).
+ * Altere apenas estas variáveis para mudar a paleta do site.
  */
+
+@font-face { font-family: "Bodoni Moda"; font-style: italic; font-weight: 400; font-display: swap; src: url("fonts/bodoni-moda-latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Bodoni Moda"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/bodoni-moda-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Crimson Pro"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/crimson-pro-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Crimson Pro"; font-style: italic; font-weight: 400; font-display: swap; src: url("fonts/crimson-pro-latin-400-italic.woff2") format("woff2"); }
+@font-face { font-family: "Crimson Pro"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/crimson-pro-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/ibm-plex-sans-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/ibm-plex-sans-latin-600-normal.woff2") format("woff2"); }
+
 :root {
-    --brand: #1e40af;          /* cor principal: botões, destaques */
-    --brand-dark: #1e3a8a;     /* hover e fundos escuros */
-    --brand-darker: #0f172a;   /* fundo do rodapé e do topo da página inicial */
-    --accent: #f59e0b;         /* cor de destaque secundária */
-    --accent-dark: #d97706;
-    --accent-text: #111827;    /* texto sobre a cor de destaque */
-    --bs-link-color-rgb: 30, 64, 175;
-    --bs-link-hover-color-rgb: 30, 58, 138;
+    --ink: #171f2a;            /* azul-noite: menu, topo, rodapé */
+    --ink-soft: #222c3a;
+    --coral: #d86a5b;          /* linha do sona, botões principais */
+    --coral-dark: #c4594a;
+    --terracota: #a44529;      /* fundo do ícone, destaques em fundo claro */
+    --terracota-dark: #8a3920;
+    --cream: #faf5ef;          /* fundo das páginas */
+    --sand: #ece6da;           /* pontos do sona, linhas e bordas */
+    --mist: #b8bbc0;           /* texto secundário em fundo escuro */
+
+    --font-display: "Bodoni Moda", "Didot", Georgia, serif;
+    --font-text: "Crimson Pro", Georgia, "Times New Roman", serif;
+    --font-ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+    --bs-body-bg: var(--cream);
+    --bs-body-color: var(--ink);
+    --bs-body-font-family: var(--font-text);
+    --bs-body-font-size: 1.125rem;
+    --bs-border-color: #ddd5c7;
+    --bs-link-color-rgb: 164, 69, 41;
+    --bs-link-hover-color-rgb: 138, 57, 32;
+    --bs-emphasis-color: var(--ink);
 }
 
-.bg-brand { background-color: var(--brand) !important; }
-.text-brand { color: var(--brand) !important; }
-.text-accent { color: var(--accent) !important; }
-.border-brand { border-color: var(--brand) !important; }
+h1, h2, h3, .h1, .h2, .h3 { font-family: var(--font-display); font-weight: 500; }
+h4, h5, h6, .h4, .h5, .h6 { font-family: var(--font-text); font-weight: 600; }
+.lead { font-size: 1.3rem; }
 
-.btn-brand {
-    --bs-btn-color: #fff;
-    --bs-btn-bg: var(--brand);
-    --bs-btn-border-color: var(--brand);
-    --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: var(--brand-dark);
-    --bs-btn-hover-border-color: var(--brand-dark);
-    --bs-btn-active-bg: var(--brand-dark);
-    --bs-btn-active-border-color: var(--brand-dark);
+/* Elementos de interface em letra sem serifa, como em ler.ekulihiso.com */
+.btn, .badge, .nav-link, .navbar, .form-label, .form-text, .breadcrumb,
+.pagination, .dropdown-menu, .alert, table thead, .card-footer, .form-select {
+    font-family: var(--font-ui);
 }
-.btn-accent {
-    --bs-btn-color: var(--accent-text);
-    --bs-btn-bg: var(--accent);
-    --bs-btn-border-color: var(--accent);
-    --bs-btn-hover-color: var(--accent-text);
-    --bs-btn-hover-bg: var(--accent-dark);
-    --bs-btn-hover-border-color: var(--accent-dark);
-    --bs-btn-active-bg: var(--accent-dark);
+.form-control, .form-select { font-size: 1rem; }
+
+.bg-brand { background-color: var(--terracota) !important; color: var(--cream) !important; }
+.text-brand { color: var(--terracota) !important; }
+.text-accent { color: var(--coral) !important; }
+.border-brand { border-color: var(--terracota) !important; }
+
+.btn {
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
     font-weight: 600;
+    font-size: .85rem;
+    padding: .55rem 1.1rem;
 }
+.btn-lg { font-size: .95rem; padding: .85rem 1.6rem; }
+.btn-sm { font-size: .72rem; padding: .3rem .7rem; }
+.btn-link { text-transform: none; letter-spacing: 0; font-weight: 500; }
 
-/* Logótipo com o nome por baixo */
+/* Fundo claro: terracota com texto creme */
+.btn-brand {
+    --bs-btn-color: var(--cream);
+    --bs-btn-bg: var(--terracota);
+    --bs-btn-border-color: var(--terracota);
+    --bs-btn-hover-color: var(--cream);
+    --bs-btn-hover-bg: var(--terracota-dark);
+    --bs-btn-hover-border-color: var(--terracota-dark);
+    --bs-btn-active-bg: var(--terracota-dark);
+    --bs-btn-active-border-color: var(--terracota-dark);
+}
+/* Fundo escuro: coral com texto azul-noite ("Criar conta gratuita") */
+.btn-accent {
+    --bs-btn-color: var(--ink);
+    --bs-btn-bg: var(--coral);
+    --bs-btn-border-color: var(--coral);
+    --bs-btn-hover-color: var(--ink);
+    --bs-btn-hover-bg: var(--coral-dark);
+    --bs-btn-hover-border-color: var(--coral-dark);
+    --bs-btn-active-bg: var(--coral-dark);
+}
+.btn-outline-light { --bs-btn-color: var(--cream); --bs-btn-border-color: var(--sand); --bs-btn-hover-color: var(--ink); --bs-btn-hover-bg: var(--sand); }
+.btn-outline-dark { --bs-btn-color: var(--ink); --bs-btn-border-color: var(--ink); --bs-btn-hover-bg: var(--ink); --bs-btn-hover-color: var(--cream); }
+.btn-dark { --bs-btn-bg: var(--ink); --bs-btn-border-color: var(--ink); }
+.text-bg-dark { background-color: var(--ink) !important; color: var(--cream) !important; }
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--coral);
+    box-shadow: 0 0 0 .2rem rgba(216, 106, 91, .25);
+}
+.form-check-input:checked { background-color: var(--terracota); border-color: var(--terracota); }
+.btn-check:checked + .btn-outline-dark { background-color: var(--ink); color: var(--cream); }
+.pagination { --bs-pagination-active-bg: var(--terracota); --bs-pagination-active-border-color: var(--terracota); --bs-pagination-color: var(--terracota); }
+
+/* Menu e logótipo (o nome "Ensino Ekulihiso" fica por baixo do sona) */
+.navbar-brand-bar { background-color: var(--ink); border-bottom: 1px solid var(--ink-soft); }
+.navbar-brand-bar .nav-link { color: var(--sand); font-size: .85rem; text-transform: uppercase; letter-spacing: .08em; }
+.navbar-brand-bar .nav-link:hover, .navbar-brand-bar .nav-link:focus { color: var(--coral); }
+
 .brand-logo {
     display: inline-flex;
     flex-direction: column;
@@ -50,41 +112,62 @@
 }
 .brand-logo img { display: block; width: auto; }
 .brand-caption {
-    margin-top: .25rem;
-    font-size: .75rem;
-    font-weight: 700;
-    letter-spacing: .04em;
-    color: var(--brand-darker);
+    margin-top: .3rem;
+    font-family: var(--font-ui);
+    font-size: .62rem;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--sand);
 }
-.brand-logo-footer .brand-caption { color: #fff; }
 
-.navbar .nav-link { color: #374151; font-weight: 500; }
-.navbar .nav-link:hover, .navbar .nav-link:focus { color: var(--brand); }
-
-.footer-brand { background-color: var(--brand-darker); }
-
-.hero {
-    background:
-        radial-gradient(circle at 85% 20%, rgba(255, 255, 255, .10), transparent 40%),
-        linear-gradient(135deg, var(--brand-darker) 0%, var(--brand-dark) 55%, var(--brand) 100%);
+.footer-brand { background-color: var(--ink); }
+.footer-muted { color: var(--mist); }
+.sona-note {
+    max-width: 34rem;
+    border-left: 1px solid var(--mist);
+    padding-left: 1rem;
+    font-style: italic;
+    color: var(--mist);
 }
+
+/* Topo da página inicial */
+.hero { background-color: var(--ink); }
+.hero .lead { color: var(--sand); }
+.hero-title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    line-height: 1.15;
+    color: var(--cream);
+}
+.rule { width: 84px; height: 3px; background: var(--coral); }
 .hero .stat {
-    background: rgba(255, 255, 255, .08);
-    border: 1px solid rgba(255, 255, 255, .15);
-    border-radius: 1rem;
+    border: 1px solid rgba(236, 230, 218, .25);
     padding: 1rem .5rem;
+    color: var(--cream);
 }
+.hero .stat small { font-family: var(--font-ui); text-transform: uppercase; letter-spacing: .08em; font-size: .7rem; color: var(--mist); }
 
+/* Cartões */
+.card { --bs-card-bg: #fff; --bs-card-border-color: #e6dfd2; border-radius: 4px; }
 .post-card { transition: transform .15s ease, box-shadow .15s ease; }
-.post-card:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .12) !important; }
+.post-card:hover { transform: translateY(-3px); box-shadow: 0 .5rem 1rem rgba(23, 31, 42, .12) !important; }
 .post-card .badge { position: relative; z-index: 2; }
+.post-card .card-title { font-family: var(--font-display); font-weight: 500; font-size: 1.2rem; }
+.text-bg-light { background-color: var(--sand) !important; color: var(--ink) !important; }
 
-.post-body { font-size: 1.05rem; line-height: 1.7; white-space: normal; }
+.post-body { font-size: 1.2rem; line-height: 1.7; }
 
 .avatar {
     width: 48px; height: 48px; flex-shrink: 0;
     border-radius: 50%;
     display: grid; place-items: center;
-    background: var(--brand); color: #fff; font-weight: 700; font-size: 1.25rem;
+    background: var(--terracota); color: var(--cream);
+    font-family: var(--font-display); font-size: 1.4rem;
 }
-.avatar-lg { width: 72px; height: 72px; font-size: 2rem; }
+.avatar-lg { width: 72px; height: 72px; font-size: 2.2rem; }
+
+/* Etiquetas das disciplinas: mais leves que os botões */
+.btn.rounded-pill { text-transform: none; letter-spacing: 0; font-weight: 500; font-size: .9rem; border-radius: 50rem; }
